@@ -5,7 +5,7 @@ class HashTable:
         self.table = [[] for _ in range(size)]
     
     # Insert package into hash table
-    def insert(self, package):
+    def insert(self, key, package):
         index = hash(package.package_id) % self.size
         bucket = self.table[index]
 
@@ -24,6 +24,15 @@ class HashTable:
 
         for package in bucket:
             if package.package_id == package_id:
-                return package
+                return {
+                    "Package ID": package.package_id,
+                    "Address": package.address,
+                    "Deadline": package.deadline,
+                    "City": package.city,
+                    "Zip Code": package.zip_code,
+                    "Weight": package.weight,
+                    "Status": package.status,
+                    "Delivery Time": package.delivery_time
+                }
         return None    
         

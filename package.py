@@ -1,16 +1,19 @@
 # Package class to store package information
 class Package:
-    def __init__(self, package_id, address, weight, deadline, city, zip_code, status="At the hub", delivery_time=None):
+    def __init__(self, package_id, address, city, state, zip_code, deadline, weight, special_notes, status, delivery_time=None):
         self.package_id = package_id
         self.address = address
-        self.weight = weight
-        self.deadline = deadline
         self.city = city
+        self.state = state
         self.zip_code = zip_code
+        self.deadline = deadline
+        self.weight = weight
+        self.special_notes = special_notes
         self.status = status
-        self.delivery_time = delivery_time
+        self.delivery_time = delivery_time 
+
 
     def __str__(self):
-        return (f"Package ID: {self.package_id}, Address: {self.address}, Deadline: {self.deadline}, "
-                f"City: {self.city}, Zip: {self.zip_code}, Weight: {self.weight}, "
+        return (f"Package ID: {self.package_id}, Address: {self.address}, "
+                f"City: {self.city}, State: {self.state}, Zip: {self.zip_code}, Deadline: {self.deadline}, Weight: {self.weight}, "
                 f"Status: {self.status}, Delivered At: {self.delivery_time}")
