@@ -1,6 +1,15 @@
 import csv
 from hashtable import HashTable
 from package import Package
+import distance_calc
+from route_algo import create_route
+
+# Function to set the location of each package
+def set_location(truck_items):
+    for package in truck_items:
+        for address in distance_calc.get_address():
+            if package.address == address[1]:
+                package.location = address[0]
 
 # Load packages from a CSV file
 with open('packages.csv') as f:
@@ -20,9 +29,10 @@ with open('packages.csv') as f:
         deadline = package[5]
         weight = package[6]
         special_notes = package[7]
+        location = ""
         status = "At the hub"
 
-        package = Package(package_id, address, city, state, zip_code, deadline, weight, special_notes, status) 
+        package = Package(package_id, address, city, state, zip_code, deadline, weight, special_notes, location, status) 
 
         print(f"Loaded package ID: {package.package_id}") 
         
@@ -54,4 +64,33 @@ with open('packages.csv') as f:
         # Insert packages into hash table
         hashtable.insert(package.package_id, package)
 
+    set_location(truck1)
+    set_location(truck2)
+    set_location(truck3)       
+
+    # Call create_route function to get the best route for each truck
+    truck1_routes = create_route(truck1, 0, [], [0])
+    truck2_routes = create_route(truck2, 0, [], [0])
+    truck3_routes = create_route(truck3, 0, [], [0])      
+
+
+    # Print truck routes (to test above function)
+    truck1_order, truck1_locations = truck1_routes
+    truck2_order, truck2_locations = truck2_routes
+    truck3_order, truck3_locations = truck3_routes
+
+    # Print Truck 1
+    print("\n--- Truck 1 Route ---")
+    for pkg in truck1_order:
+        print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+
+    # Print Truck 2
+    print("\n--- Truck 2 Route ---")
+    for pkg in truck2_order:
+        print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+
+    # Print Truck 3
+    print("\n--- Truck 3 Route ---")
+    for pkg in truck3_order:
+        print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
 
