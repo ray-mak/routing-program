@@ -79,18 +79,30 @@ with open('packages.csv') as f:
     truck2_order, truck2_locations = truck2_routes
     truck3_order, truck3_locations = truck3_routes
 
-    # Print Truck 1
-    print("\n--- Truck 1 Route ---")
-    for pkg in truck1_order:
-        print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+    # Call truck_distance to calculate the total distance for each truck
+    truck1_distance = distance_calc.truck_distance(truck1_order)
+    truck2_distance = distance_calc.truck_distance(truck2_order)
+    truck3_distance = distance_calc.truck_distance(truck3_order)
 
-    # Print Truck 2
-    print("\n--- Truck 2 Route ---")
-    for pkg in truck2_order:
-        print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+    total_mileage = truck1_distance + truck2_distance + truck3_distance
+        
+    print(f"Truck 1 Distance: {truck1_distance:.2f} miles")
+    print(f"Truck 2 Distance: {truck2_distance:.2f} miles")
+    print(f"Truck 3 Distance: {truck3_distance:.2f} miles")
+    print(f"Total Distance: {total_mileage:.2f} miles")
 
-    # Print Truck 3
-    print("\n--- Truck 3 Route ---")
-    for pkg in truck3_order:
-        print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+    # # Print Truck 1
+    # print("\n--- Truck 1 Route ---")
+    # for pkg in truck1_order:
+    #     print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+
+    # # Print Truck 2
+    # print("\n--- Truck 2 Route ---")
+    # for pkg in truck2_order:
+    #     print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+
+    # # Print Truck 3
+    # print("\n--- Truck 3 Route ---")
+    # for pkg in truck3_order:
+    #     print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
 
