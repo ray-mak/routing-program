@@ -3,6 +3,8 @@ from hashtable import HashTable
 from package import Package
 import distance_calc
 from route_algo import create_route
+from datetime import datetime, timedelta
+from status import *
 
 # Function to set the location of each package
 def set_location(truck_items):
@@ -33,8 +35,6 @@ with open('packages.csv') as f:
         status = "At the hub"
 
         package = Package(package_id, address, city, state, zip_code, deadline, weight, special_notes, location, status) 
-
-        print(f"Loaded package ID: {package.package_id}") 
         
         # Packages that must be in truck 2 or are delayed are assigned to truck 2
         if special_notes == "Can only be on truck 2" or special_notes == "Delayed on flight---will not arrive to depot until 9:05 am":
@@ -85,24 +85,61 @@ with open('packages.csv') as f:
     truck3_distance = distance_calc.truck_distance(truck3_order)
 
     total_mileage = truck1_distance + truck2_distance + truck3_distance
-        
-    print(f"Truck 1 Distance: {truck1_distance:.2f} miles")
-    print(f"Truck 2 Distance: {truck2_distance:.2f} miles")
-    print(f"Truck 3 Distance: {truck3_distance:.2f} miles")
-    print(f"Total Distance: {total_mileage:.2f} miles")
 
-    # # Print Truck 1
-    # print("\n--- Truck 1 Route ---")
-    # for pkg in truck1_order:
-    #     print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+    # Function to print the total distance for each truck
+    def print_total_distance():
+        print(f"Total Distance Travelled By All Trucks: {total_mileage:.2f} miles")
 
-    # # Print Truck 2
-    # print("\n--- Truck 2 Route ---")
-    # for pkg in truck2_order:
-    #     print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+    
+    # Set departure time for each truck
+    truck1_departure = datetime.strptime("8:00", "%H:%M")
+    truck2_departure = datetime.strptime("9:05", "%H:%M")    
+    truck3_ready = datetime.strptime("10:20", "%H:%M")
 
-    # # Print Truck 3
-    # print("\n--- Truck 3 Route ---")
-    # for pkg in truck3_order:
-    #     print(f"Package ID: {pkg.package_id}, Address: {pkg.address}")
+    
+    # Function to get the return time 
+    def get_return_time(departure_time, total_miles):
+        hours = total_miles / 18
+        return departure_time + timedelta(hours=hours)
+    
+    
+    # Calculate the return time for each truck
+    truck1_return = get_return_time(truck1_departure, truck1_distance)
+    truck2_return = get_return_time(truck2_departure, truck2_distance)
+
+    truck3_departure = max(truck1_return, truck2_return, truck3_ready)
+
+    assign_delivery_times(truck1_order, truck1_departure)
+    assign_delivery_times(truck2_order, truck2_departure)
+    assign_delivery_times(truck3_order, truck3_departure)
+
+    all_trucks = [truck1_order, truck2_order, truck3_order]
+
+    # Function to get the status of a single package at a specific time
+    def get_package_status(package_id, time_to_check):
+        check_time = datetime.strptime(time_to_check, "%H:%M")
+        update_status(truck1_order, truck1_departure, check_time)
+        update_status(truck2_order, truck2_departure, check_time)
+        update_status(truck3_order, truck3_departure, check_time)
+
+        for truck in all_trucks:
+            for package in truck:
+                if package.package_id == package_id:
+                    print(f"Package ID: {package.package_id} | Address: {package.address}, {package.city}, {package.state} {package.zip_code} | Status: {package.status} | Delivery Time: {package.delivery_time.strftime('%H:%M:%S')}")
+                    return
+
+    # Function to get the status of all packages at a specific time            
+    def get_all_package_status(time_to_check):
+        check_time = datetime.strptime(time_to_check, "%H:%M")
+        update_status(truck1_order, truck1_departure, check_time)
+        update_status(truck2_order, truck2_departure, check_time)
+        update_status(truck3_order, truck3_departure, check_time)
+
+        all_packages = truck1_order + truck2_order + truck3_order
+
+        ordered_packages = sorted(all_packages, key=lambda x: x.package_id)
+
+        for package in ordered_packages:
+            print(f"Package ID: {package.package_id} | Address: {package.address}, {package.city}, {package.state} {package.zip_code} | Status: {package.status} | Delivery Time: {package.delivery_time.strftime('%H:%M:%S')}")
+
 

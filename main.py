@@ -1,26 +1,32 @@
 # Raymond Mak, ID 012483817
 
-from package import Package
-from hashtable import HashTable
+from load_truck import *
+def main():
+    print("Greetings! Please select one of the following options:")
+    print("1. Get status of single package at a specific time")
+    print("2. Get status of all packages at a specific time")
+    print("3. Get total mileage of all trucks")
+    print("4. Exit")
 
-hash_table = HashTable()
+    while True:
+        choice = input("Enter your choice (1,2,3 or 4 to exit): ")
+        if choice == "1":
+            package_id = int(input("Enter the package ID: "))
+            time = input("Enter the time in 24-hour format (HH:MM): ")
+            get_package_status(package_id, time)
+            break
+        elif choice == "2":
+            time = input("Enter the time in 24-hour format (HH:MM): ")
+            get_all_package_status(time)
+            break
+        elif choice == "3":
+            print_total_distance()
+            break
+        elif choice == "4":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please select a number between 1 and 4.")
 
-package1 = Package(1, "123 Main St", "10:30 AM", "Salt Lake City", "84101", "5", "At Hub")
-package2 = Package(2, "456 Elm St", "EOD", "Salt Lake City", "84105", "2", "At Hub")
-package3 = Package(3, "789 Oak St", "9:00 AM", "Salt Lake City", "84115", "7", "At Hub")
-
-# Insert packages into hash table
-hash_table.insert(package1.package_id, package1)
-hash_table.insert(package2.package_id, package2)
-hash_table.insert(package3.package_id, package3)
-
-# Lookup and print results
-print("----- Package Lookups -----")
-for package_id in [1, 2, 3, 99]:  # 99 is a test for a missing package
-    result = hash_table.lookup(package_id)
-    if result:
-        print(f"\nPackage {package_id} Found:")
-        for key, value in result.items():
-            print(f"{key}: {value}")
-    else:
-        print(f"\nPackage {package_id} not found.")
+if __name__ == "__main__":
+    main()

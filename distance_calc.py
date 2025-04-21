@@ -8,7 +8,7 @@ with open('distance.csv') as f:
 with open('addresses.csv') as f:
     address = csv.reader(f, delimiter=',')
     address_list = list(address)
-    print(address_list)
+    # print(address_list)
 
     # Get the addresses
     def get_address():
