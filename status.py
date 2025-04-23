@@ -23,7 +23,13 @@ def assign_delivery_times(truck_route, departure_time):
 
 # Function to update the status of each package
 def update_status(truck_route, departure_time, current_time):
+
     for package in truck_route:
+        # Update the address of package 9 if it is after 10:20
+        if package.package_id == 9 and current_time > datetime.strptime("10:20", "%H:%M"):
+            package.address = "410 S State St"
+            package.zip_code = "84111"
+    
         if current_time < departure_time:
             package.status = "At the hub"
         elif departure_time <= current_time < package.delivery_time:

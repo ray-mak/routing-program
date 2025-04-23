@@ -1,7 +1,8 @@
 # Package class to store package information
 class Package:
-    def __init__(self, package_id, address, city, state, zip_code, deadline, weight, special_notes, status, location, delivery_time=None):
+    def __init__(self, package_id, truck_number, address, city, state, zip_code, deadline, weight, special_notes, status, location, delivery_time=None):
         self.package_id = package_id
+        self.truck_number = truck_number
         self.address = address
         self.city = city
         self.state = state

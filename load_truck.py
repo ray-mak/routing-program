@@ -24,6 +24,7 @@ with open('packages.csv') as f:
 
     for package in packages:
         package_id = int(package[0])
+        truck_number = ""
         address = package[1]
         city = package[2]
         state = package[3]
@@ -34,31 +35,38 @@ with open('packages.csv') as f:
         location = ""
         status = "At the hub"
 
-        package = Package(package_id, address, city, state, zip_code, deadline, weight, special_notes, location, status) 
+        package = Package(package_id, truck_number, address, city, state, zip_code, deadline, weight, special_notes, location, status) 
         
         # Packages that must be in truck 2 or are delayed are assigned to truck 2
         if special_notes == "Can only be on truck 2" or special_notes == "Delayed on flight---will not arrive to depot until 9:05 am":
+            package.truck_number = "Truck 2"
             truck2.append(package)
 
         # Package with wrong address assigned to truck 3 to wait for updated address
         elif package_id == 9:
+            package.truck_number = "Truck 3"
             truck3.append(package)
 
         # Packages that do not have EOD deadline and need to be together are assigned to truck 1
         elif deadline != "EOD" or package_id == 1:
+            package.truck_number = "Truck 1"
             truck1.append(package)
         
         # Package 19 has EOD deadline, but must be delivered with 14 and 16 which do not
         elif package_id == 19:
+            package.truck_number = "Truck 1"
             truck1.append(package)
 
         # Add remaining packages to the trucks
         if package not in truck1 and package not in truck2 and package not in truck3:
             if len(truck3) < 16:
+                package.truck_number = "Truck 3"
                 truck3.append(package)
             elif len(truck2) < 16:
+                package.truck_number = "Truck 2"
                 truck2.append(package)
             else:
+                package.truck_number = "Truck 1"
                 truck1.append(package)
         
         # Insert packages into hash table
@@ -74,7 +82,7 @@ with open('packages.csv') as f:
     truck3_routes = create_route(truck3, 0, [], [0])      
 
 
-    # Print truck routes (to test above function)
+    # Deconstruct the data returned from the create_route function
     truck1_order, truck1_locations = truck1_routes
     truck2_order, truck2_locations = truck2_routes
     truck3_order, truck3_locations = truck3_routes
@@ -125,7 +133,7 @@ with open('packages.csv') as f:
         for truck in all_trucks:
             for package in truck:
                 if package.package_id == package_id:
-                    print(f"Package ID: {package.package_id} | Address: {package.address}, {package.city}, {package.state} {package.zip_code} | Status: {package.status} | Delivery Time: {package.delivery_time.strftime('%H:%M:%S')}")
+                    print(f"Package ID: {package.package_id} | Truck Number: {package.truck_number} | Address: {package.address}, {package.city}, {package.state} {package.zip_code} | Deadline: {package.deadline} | Status: {package.status} | Delivery Time: {package.delivery_time.strftime('%H:%M:%S')}")
                     return
 
     # Function to get the status of all packages at a specific time            
@@ -140,6 +148,6 @@ with open('packages.csv') as f:
         ordered_packages = sorted(all_packages, key=lambda x: x.package_id)
 
         for package in ordered_packages:
-            print(f"Package ID: {package.package_id} | Address: {package.address}, {package.city}, {package.state} {package.zip_code} | Status: {package.status} | Delivery Time: {package.delivery_time.strftime('%H:%M:%S')}")
+            print(f"Package ID: {package.package_id} | Truck Number: {package.truck_number} | Address: {package.address}, {package.city}, {package.state} {package.zip_code} | Deadline: {package.deadline} | Status: {package.status} | Delivery Time: {package.delivery_time.strftime('%H:%M:%S')}")
 
 
